@@ -1,0 +1,26 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["@/services/*.ts","env.d.ts",
+    "src/**/*",
+    "src/**/*.vue",
+    "Types/freecurrencyapi-js.d.ts",
+    "./types/**/*.ts", "src/**/*.ts",
+    "./src/router/**/*.ts",
+    "./src/stores/**/*.ts",
+    "src/types.ts",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "src/types/**/*.d.ts",
+    "Types/*.ts",
+    "./src/components/__tests__/*.ts",],
+  "exclude": ["src/**/__tests__/*", "node_modules"],
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}

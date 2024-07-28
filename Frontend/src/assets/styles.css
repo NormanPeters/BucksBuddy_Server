@@ -1,0 +1,52 @@
+:root {
+    --bg-light: linear-gradient(to bottom, #f6f1d3, #648880 85%, #293f50);
+    --bg-dark: linear-gradient(to bottom, #293f50, #648880 85%, #f6f1d3);
+}
+
+/* Light/Dark Mode begins*/
+[data-bs-theme="light"] body {
+    background-image: var(--bg-light);
+}
+
+[data-bs-theme="dark"] body {
+    background-image: var(--bg-dark);
+}
+/*Light/Dark Mode ends*/
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.main-content {
+    flex: 1;
+}
+
+.card {
+    background-color: var(--bs-tertiary-bg);
+    border: none;
+}
+
+h2 {
+    text-transform: uppercase;
+}
+
+h3 {
+    text-transform: uppercase;
+    font-size: 1.3rem;
+}
+
+h4 {
+    color: var(--bs-tertiary-color);
+    text-transform: uppercase;
+    font-size: 1.1rem;
+}
