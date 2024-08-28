@@ -46,15 +46,15 @@ public class UserControllerTest {
     @Test
     public void testLoginSuccess() throws Exception {
         UserLoginRequest request = new UserLoginRequest();
-        request.setEmail("test@example.com");
+        request.setUsername("test@example.com");
         request.setPassword("password");
 
         User user = new User();
-        user.setEmail("test@example.com");
+        user.setUsername("test@example.com");
         user.setPassword("encodedPassword");
         user.setUuid("test-uuid");
 
-        when(userService.getUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(userService.getUserByUsername("test@example.com")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("password", "encodedPassword")).thenReturn(true);
 
         mockMvc.perform(post("/users/login")
@@ -67,14 +67,14 @@ public class UserControllerTest {
     @Test
     public void testLoginFailure() throws Exception {
         UserLoginRequest request = new UserLoginRequest();
-        request.setEmail("test@example.com");
+        request.setUsername("test@example.com");
         request.setPassword("wrongPassword");
 
         User user = new User();
-        user.setEmail("test@example.com");
+        user.setUsername("test@example.com");
         user.setPassword("encodedPassword");
 
-        when(userService.getUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(userService.getUserByUsername("test@example.com")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("wrongPassword", "encodedPassword")).thenReturn(false);
 
         mockMvc.perform(post("/users/login")
@@ -86,8 +86,8 @@ public class UserControllerTest {
 
     @Test
     public void testCreateUserSuccess() throws Exception {
-        User user = new User("new@example.com", "NewPassword1");
-        User savedUser = new User("new@example.com", "encodedPassword");
+        User user = new User("testuser", "NewPassword1");
+        User savedUser = new User("testuser", "encodedPassword");
 
         when(passwordEncoder.encode("NewPassword1")).thenReturn("encodedPassword");
         when(userService.saveUser(any(User.class))).thenReturn(savedUser);
@@ -96,13 +96,13 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value("new@example.com"))
+                .andExpect(jsonPath("$.username").value("testuser"))
                 .andExpect(jsonPath("$.password").value("encodedPassword"));
     }
 
     @Test
-    public void testCreateUserInvalidEmail() throws Exception {
-        User user = new User("invalid-email", "NewPassword1");
+    public void testCreateUserInvalidUsername() throws Exception {
+        User user = new User("invalid-username?", "NewPassword1");
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -112,7 +112,7 @@ public class UserControllerTest {
 
     @Test
     public void testCreateUserInvalidPassword() throws Exception {
-        User user = new User("new@example.com", "short");
+        User user = new User("testuser", "short");
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)

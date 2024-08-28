@@ -1,6 +1,6 @@
 package com.bucksbuddy.bucksbuddy.user;
 
-import com.bucksbuddy.bucksbuddy.user.exceptions.EmailAlreadyRegisteredException;
+import com.bucksbuddy.bucksbuddy.user.exceptions.UsernameAlreadyRegisteredException;
 import com.bucksbuddy.bucksbuddy.user.requests.PasswordUpdateRequest;
 import com.bucksbuddy.bucksbuddy.user.requests.UserLoginRequest;
 import jakarta.validation.Valid;
@@ -28,7 +28,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginRequest request) {
-        Optional<User> validUser = userService.getUserByEmail(request.getEmail());
+        Optional<User> validUser = userService.getUserByUsername(request.getUsername());
         String enteredPassword = request.getPassword();
         String storedPassword = validUser.map(User::getPassword).orElse("");
         if (validUser.isPresent() && passwordEncoder.matches(enteredPassword, storedPassword)) {
@@ -50,7 +50,7 @@ public class UserController {
         try {
             User savedUser = userService.saveUser(user);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-        } catch (EmailAlreadyRegisteredException e) {
+        } catch (UsernameAlreadyRegisteredException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
