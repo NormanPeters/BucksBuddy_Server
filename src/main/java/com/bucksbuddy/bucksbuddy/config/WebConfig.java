@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 // Erlaube Anfragen von mehreren Ursprüngen
                 .allowedOrigins(
-                        "http://localhost:5173", "https://travel-fund.onrender.com")
+                        "http://localhost:5173", "https://bucks-buddy.onrender.com")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
