@@ -1,6 +1,5 @@
 package com.bucksbuddy.bucksbuddy.user;
 
-import com.bucksbuddy.bucksbuddy.user.exceptions.UsernameAlreadyRegisteredException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +20,6 @@ public class UserService {
     }
 
     public User saveUser(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new UsernameAlreadyRegisteredException(user.getUsername());
-        }
         return userRepository.save(user);
     }
 

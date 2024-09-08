@@ -1,6 +1,5 @@
 package com.bucksbuddy.bucksbuddy.user;
 
-import com.bucksbuddy.bucksbuddy.user.exceptions.UsernameAlreadyRegisteredException;
 import com.bucksbuddy.bucksbuddy.user.requests.PasswordUpdateRequest;
 import com.bucksbuddy.bucksbuddy.user.requests.UserLoginRequest;
 import jakarta.validation.Valid;
@@ -50,8 +49,6 @@ public class UserController {
         try {
             User savedUser = userService.saveUser(user);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-        } catch (UsernameAlreadyRegisteredException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

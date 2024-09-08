@@ -25,7 +25,7 @@ public class User {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$", message = "Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, and a number")
     private String password;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String uuid;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
