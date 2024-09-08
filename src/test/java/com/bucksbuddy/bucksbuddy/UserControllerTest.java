@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,22 +48,29 @@ public class UserControllerTest {
     @Test
     public void testLoginSuccess() throws Exception {
         UserLoginRequest request = new UserLoginRequest();
-        request.setUsername("test@example.com");
+        request.setUsername("Testusername");
         request.setPassword("password");
 
-        User user = new User();
-        user.setUsername("test@example.com");
-        user.setPassword("encodedPassword");
-        user.setUuid("test-uuid");
+        User user1 = new User();
+        user1.setUsername("Testusername");
+        user1.setPassword("encodedPassword1");
+        user1.setUuid("6069bd54-47e4-45dd-8d55-388176e504ee");  // Set explicit UUID
 
-        when(userService.getUserByUsername("test@example.com")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("password", "encodedPassword")).thenReturn(true);
+        User user2 = new User();
+        user2.setUsername("Testusername");
+        user2.setPassword("encodedPassword2");  // This user's password matches
+        user2.setUuid("6069bd54-47e4-45dd-8d55-388176e504ee");  // Ensure correct UUID
+
+        List<User> users = Arrays.asList(user1, user2);
+
+        when(userService.getUsersByUsername("Testusername")).thenReturn(users);
+        when(passwordEncoder.matches("password", "encodedPassword2")).thenReturn(true);
 
         mockMvc.perform(post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("UUID: test-uuid"));
+                .andExpect(content().string("UUID: 6069bd54-47e4-45dd-8d55-388176e504ee"));  // Check for the correct UUID
     }
 
     @Test
@@ -70,12 +79,19 @@ public class UserControllerTest {
         request.setUsername("test@example.com");
         request.setPassword("wrongPassword");
 
-        User user = new User();
-        user.setUsername("test@example.com");
-        user.setPassword("encodedPassword");
+        User user1 = new User();
+        user1.setUsername("test@example.com");
+        user1.setPassword("encodedPassword1");
 
-        when(userService.getUserByUsername("test@example.com")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("wrongPassword", "encodedPassword")).thenReturn(false);
+        User user2 = new User();
+        user2.setUsername("test@example.com");
+        user2.setPassword("encodedPassword2");
+
+        List<User> users = Arrays.asList(user1, user2);
+
+        when(userService.getUsersByUsername("test@example.com")).thenReturn(users);
+        when(passwordEncoder.matches("wrongPassword", "encodedPassword1")).thenReturn(false);
+        when(passwordEncoder.matches("wrongPassword", "encodedPassword2")).thenReturn(false);
 
         mockMvc.perform(post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,12 +28,16 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginRequest request) {
-        Optional<User> validUser = userService.getUserByUsername(request.getUsername());
+        List<User> validUsers = userService.getUsersByUsername(request.getUsername());
         String enteredPassword = request.getPassword();
-        String storedPassword = validUser.map(User::getPassword).orElse("");
-        if (validUser.isPresent() && passwordEncoder.matches(enteredPassword, storedPassword)) {
-            return new ResponseEntity<>("UUID: " + validUser.get().getUuid(), HttpStatus.OK);
+
+        for (User user : validUsers) {
+            String storedPassword = user.getPassword();
+            if (passwordEncoder.matches(enteredPassword, storedPassword)) {
+                return new ResponseEntity<>("UUID: " + user.getUuid(), HttpStatus.OK);
+            }
         }
+
         return new ResponseEntity<>("Invalid credentials", HttpStatus.NOT_FOUND);
     }
 

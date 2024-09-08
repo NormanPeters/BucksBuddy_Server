@@ -3,6 +3,7 @@ package com.bucksbuddy.bucksbuddy.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -11,8 +12,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public List<User> getUsersByUsername(String username) {
+        return userRepository.findAllByUsername(username);
     }
 
     public Optional<User> getUserByUuid(String uuid) {
